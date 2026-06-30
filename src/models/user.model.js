@@ -25,12 +25,16 @@ userSchema = mongoose.Schema({
         /* select: false means this field is EXCLUDED from query results by default.
         It has nothing to do with making the field optional.
         Use required: false to make a field optional. */
+    },
+    systemUser: {
+        type: Boolean,
+        immutable: true,
+        default: false,
+        select: false
     }
-
 }, {
     timestamps: true
 })
-
 
 userSchema.pre("save", async function () {
     if (!this.isModified("password")) {
@@ -40,14 +44,9 @@ userSchema.pre("save", async function () {
     this.password = hash;
     return
 })
-
-
-
 userSchema.methods.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password)
 }
-
-
 
 const userModel = mongoose.model("User", userSchema)
 

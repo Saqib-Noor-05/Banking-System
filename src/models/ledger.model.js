@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const transactionModel = require('./transactions.mode')
+const transactionModel = require('./transactions.model')
 const ledgerSchema = mongoose.Schema({
 
     account: {
@@ -11,7 +11,7 @@ const ledgerSchema = mongoose.Schema({
 
     },
     amount: {
-        type: number,
+        type: Number,
         required: [true, "Account is required to perfrom transaction"],
         immutable: true
 
@@ -32,6 +32,7 @@ const ledgerSchema = mongoose.Schema({
         immutable: true
     }
 })
+
 
 
 function preventLedgerModification() {

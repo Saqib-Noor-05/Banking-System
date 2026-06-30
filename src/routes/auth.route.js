@@ -6,4 +6,5 @@ router.post('/register', authController.userRegisterController)
 router.post('/login', authController.loginUser)
 
 
+
 module.exports = router
