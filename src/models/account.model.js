@@ -22,6 +22,9 @@ const accountSchema = mongoose.Schema({
     },
     currency: {
         type: String,
+        enum: {
+            values: ["USD", "INR", "SAR", "AED"]
+        },
         required: [true, "Currency is required to  creating an account"],
         default: "INR"
     }
@@ -36,7 +39,7 @@ accountSchema.methods.getBalance = async function () {
         { $match: { account: this._id } },
         {
             $group: {
-                _id: NULL,
+                _id: null,
                 totalDebit: {
                     $sum: {
                         $cond: [
@@ -62,13 +65,17 @@ accountSchema.methods.getBalance = async function () {
         {
             $project: {
                 _id: 0,
-                balance: { $subtract: ["$totalCredit", "totaldebit"] }
+                balance: {
+                    $subtract:
+                        ["$totalCredit", "$totalDebit"]
+                }
             }
         }
 
     ])
 
     if (balanceData.length === 0) { return 0 }
+
     return balanceData[0].balance
 }
 

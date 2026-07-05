@@ -1,10 +1,17 @@
 const userModel = require('../models/user.model')
 const jwt = require('jsonwebtoken')
+const tokenBLModel = require('../models/blacklist.model')
 
 async function authMiddlewares(req, res, next) {
     const token = req.cookies.token || req.headers.authorization?.split(" ")[1]
     if (!token) {
         return res.status(401).json({ message: "Unauthorised , Token is missing" })
+    }
+
+    if (await tokenBLModel.findOne({ token })) {
+        return res.status(400).json({
+            message: "Unauthorised access, Token  is invalid"
+        })
     }
 
     try {

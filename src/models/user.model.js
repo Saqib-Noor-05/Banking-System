@@ -29,7 +29,7 @@ userSchema = mongoose.Schema({
     systemUser: {
         type: Boolean,
         immutable: true,
-        default: false,
+        default: false,  //default value of systemUser is false .
         select: false
     }
 }, {

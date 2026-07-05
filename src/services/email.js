@@ -40,7 +40,6 @@ const sendEmail = async (to, subject, text, html) => {
 };
 
 
-
 async function sendRegistrationEmail(userEmail, name) {
     const subject = 'Welcome to Banking System!'
     const text = `Hello ${name},\n\nThank you for registering at Banking System.`

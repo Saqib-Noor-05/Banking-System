@@ -2,6 +2,7 @@ const userModel = require('../models/user.model')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const emailServices = require('../services/email')
+const tokenBLModel = require('../models/blacklist.model')
 
 async function userRegisterController(req, res) {
     const { email, name, password } = req.body;
@@ -71,6 +72,7 @@ async function loginUser(req, res) {
     }, process.env.JWT_SECRET)
 
     res.cookie("token", token)
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
     res.status(200).json({
         message: "Login Successfully",
@@ -82,4 +84,23 @@ async function loginUser(req, res) {
     })
 }
 
-module.exports = { userRegisterController, loginUser }
+async function logoutUser(req, res) {
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1]
+    if (!token) {
+        return res.status(200).json({
+            message: "User logged out successfully"
+        })
+    }
+    res.clearCookie("token")
+    // res.cookie.clear("token", "")
+    await tokenBLModel.create({
+        token: token
+    })
+
+    res.status(200).json({
+        message: "User logged out successfully"
+    })
+}
+
+
+module.exports = { userRegisterController, loginUser, logoutUser }
